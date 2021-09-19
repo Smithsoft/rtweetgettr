@@ -39,7 +39,9 @@ class Header extends React.Component<PropsType, StateType> {
         preferences: Appearance.AppearancePreferences,
     ): void {
         const { colorScheme } = preferences
-        this.setState({ colorScheme })
+        this.setState((prevState) => { 
+            return { ...prevState, colorScheme }
+        })
     }
 
     styles = StyleSheet.create({
