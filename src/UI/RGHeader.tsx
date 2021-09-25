@@ -17,7 +17,7 @@ type StateType = {
     colorScheme: ColorSchemeName
 }
 
-class Header extends React.Component<PropsType, StateType> {
+class RGHeader extends React.Component<PropsType, StateType> {
     constructor(props: PropsType) {
         super(props)
         this.handleAppearanceChange = this.handleAppearanceChange.bind(this)
@@ -81,11 +81,13 @@ class Header extends React.Component<PropsType, StateType> {
             color:
                 this.state.colorScheme === 'dark' ? Colors.white : Colors.black,
         }
+
+        // Magic numbers from inspection of viral_tweet.svg
         const logoWidth = 1132.29792
         const logoHeight = 790.67423
 
         return (
-            <View>
+            <View style={imageBackgroundStyling}>
                 <HeaderLogo height={logoHeight/4} width={logoWidth/4} />
                 <Text style={[this.styles.text, textStyling]}>
                     {this.props.headerTitle}
@@ -95,4 +97,4 @@ class Header extends React.Component<PropsType, StateType> {
     }
 }
 
-export default Header
+export default RGHeader
