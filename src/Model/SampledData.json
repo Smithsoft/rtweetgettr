@@ -1,0 +1,140 @@
+{
+    "data": [
+        {
+            "referenced_tweets": [
+                {
+                    "type": "quoted",
+                    "id": "737810183989125121"
+                }
+            ],
+            "author_id": "2421631333",
+            "id": "737817726844968963",
+            "text": "We found someone who can eclipse @sbxr - that's a feat in itself!  :-) https://t.co/ogSJqnsi24",
+            "created_at": "2016-06-01T01:27:08.000Z"
+        },
+        {
+            "referenced_tweets": [
+                {
+                    "type": "quoted",
+                    "id": "737810183989125121"
+                }
+            ],
+            "author_id": "2421631333",
+            "id": "737817286325600256",
+            "text": "Nice work Deb! https://t.co/ogSJqnsi24",
+            "created_at": "2016-06-01T01:25:23.000Z"
+        },
+        {
+            "author_id": "2421631333",
+            "id": "737517909140856833",
+            "text": "Just fixed: that \"cannot add rows to an array root element\" bug.  Grab v1.1.1 at https://t.co/D6GSVeBAAx  :-)",
+            "created_at": "2016-05-31T05:35:46.000Z"
+        },
+        {
+            "author_id": "2421631333",
+            "id": "632447174219960320",
+            "text": "A couple folks who used PayPal to pick up a copy of Plistinator missed out on a key! Sorry!!  You should have those keys now.  :-)",
+            "created_at": "2015-08-15T07:02:11.000Z"
+        },
+        {
+            "author_id": "2421631333",
+            "id": "608816747328618496",
+            "text": "Version 1.1 is out!  Check http://t.co/D6GSVeBAAx if you haven't got it yet.  Mac App Store folks: its in review &amp; should be with you soon!",
+            "created_at": "2015-06-11T02:03:18.000Z"
+        },
+        {
+            "author_id": "2421631333",
+            "id": "605916664383729664",
+            "text": "Work on a couple of issues is continuing for the little editor that can.  Release of v1.1 w several improvements by end June!",
+            "created_at": "2015-06-03T01:59:24.000Z"
+        },
+        {
+            "author_id": "2421631333",
+            "id": "605915946633469953",
+            "text": "Linux 32 bit support comes to Plistinator!  Map props to @happysnowmantec for testing it out for us. http://t.co/RaNb5P5ku0",
+            "created_at": "2015-06-03T01:56:33.000Z"
+        },
+        {
+            "author_id": "2421631333",
+            "id": "556433312500039682",
+            "text": ".@GregHuntMP demanded we 'explain' some things about the Reef for him. So we did. http://t.co/6pjRSDF54m via @GetUp",
+            "created_at": "2015-01-17T12:50:14.000Z"
+        },
+        {
+            "referenced_tweets": [
+                {
+                    "type": "retweeted",
+                    "id": "453280081897467905"
+                }
+            ],
+            "author_id": "2421631333",
+            "id": "453744741302038528",
+            "text": "RT @ivanristic: @MacLemon It depends on what’s in the memory block. Leaked ticket key would compromise all sessions it signed.",
+            "created_at": "2014-04-09T04:02:31.000Z"
+        },
+        {
+            "referenced_tweets": [
+                {
+                    "type": "replied_to",
+                    "id": "450927238499016704"
+                }
+            ],
+            "author_id": "2421631333",
+            "id": "450952838294683648",
+            "text": "@Fas_Flow Sorry about that!  If you fancy doing a review I can send you a reviewers promo code tho'.  Review can be a tweet I guess... :-)",
+            "created_at": "2014-04-01T11:08:29.000Z"
+        }
+    ],
+    "includes": {
+        "users": [
+            {
+                "id": "2421631333",
+                "name": "Plistinator",
+                "username": "plistinator"
+            }
+        ],
+        "tweets": [
+            {
+                "author_id": "2647302752",
+                "id": "737810183989125121",
+                "text": "So great for @pet_cloud to meet @turnbullmalcolm today at @RiverCityLabs along with @SteveBaxter @WyattRoyMP https://t.co/KwDMrnbxmM",
+                "created_at": "2016-06-01T00:57:10.000Z",
+                "attachments": {
+                    "media_keys": [
+                        "3_737810181271085056"
+                    ]
+                }
+            },
+            {
+                "referenced_tweets": [
+                    {
+                        "type": "replied_to",
+                        "id": "453279411509657600"
+                    }
+                ],
+                "author_id": "19941586",
+                "id": "453280081897467905",
+                "text": "@MacLemon It depends on what’s in the memory block. Leaked ticket key would compromise all sessions it signed.",
+                "created_at": "2014-04-07T21:16:07.000Z"
+            },
+            {
+                "referenced_tweets": [
+                    {
+                        "type": "replied_to",
+                        "id": "450917527447560192"
+                    }
+                ],
+                "author_id": "925441693",
+                "id": "450927238499016704",
+                "text": "@plistinator Oh yeah good to see that :) no trial version ? :D",
+                "created_at": "2014-04-01T09:26:46.000Z"
+            }
+        ]
+    },
+    "meta": {
+        "oldest_id": "450952838294683648",
+        "newest_id": "737817726844968963",
+        "result_count": 10,
+        "next_token": "zldjwdz3w6sba13nbsuvf7p2128h5njfxd6zraeonqw"
+    }
+}
