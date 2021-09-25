@@ -1,4 +1,4 @@
-import Header from "./Header";
+import Header from "./RGHeader";
 import Colors from "./Colors";
 import TweetRow from "./TweetRow";
 
