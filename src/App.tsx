@@ -1,40 +1,85 @@
-import React from 'react'
+import React, { ErrorInfo } from 'react'
 import {
     Appearance,
-    FlatList,
-    ListRenderItem,
-    ListRenderItemInfo,
-    Pressable,
     SafeAreaView,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     StatusBar,
     StyleSheet,
+    Text,
+    View,
 } from 'react-native'
 
-import Header from './UI/Header'
 import Colors from './UI/Colors'
-import TweetRow from './UI/TweetRow'
 import AppearanceManager from './UI/AppearanceManager'
-import Tweet from './Model/Tweet'
-import { Source } from 'react-native-fast-image'
+import TweetsList from './UI/TweetsList'
+
+import { tweets } from './Model/FakeData'
 
 type PropsType = unknown
 
 type StateType = {
     isDarkMode: boolean
+    hasError: boolean
+    errMessage: string
 }
-
-type LayoutParams = {
-    length: number
-    offset: number
-    index: number
-}
-
-const ITEM_HEIGHT = 44
 
 class App extends React.PureComponent<PropsType, StateType> {
     state = {
         isDarkMode: Appearance.getColorScheme() === 'dark',
+        hasError: false,
+        errMessage: '',
+    }
+
+    constructor(props: PropsType) {
+        super(props)
+        this.appearanceChangeHandler = this.appearanceChangeHandler.bind(this)
+    }
+
+    public static getDerivedStateFromError(err: Error): StateType {
+        // Update state so the next render will show the fallback UI.
+        const updatedState = { 
+            isDarkMode: Appearance.getColorScheme() === 'dark', 
+            hasError: true, 
+            errMessage: `${err.name}: ${err.message}` 
+        }
+        return updatedState
+    }
+
+    public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+        console.error('Uncaught error:', error, errorInfo)
+    }
+
+    appearanceChangeHandler(manager: AppearanceManager): void {
+        this.setState((prevState) => {
+            return { ...prevState, isDarkMode: manager.state.colorScheme === 'dark' }
+        })
+    }
+
+    render(): JSX.Element {
+        const isDk = this.state.isDarkMode
+        const backgroundStyle = {
+            backgroundColor: isDk ? Colors.darker : Colors.lighter,
+        }
+        const textStyle = isDk ? this.lightText.textColor : this.darkText.textColor
+
+        const routineView = (
+            <>
+                <AppearanceManager handler={this.appearanceChangeHandler} />
+                <SafeAreaView style={backgroundStyle}>
+                    <StatusBar
+                        barStyle={isDk ? 'light-content' : 'dark-content'}
+                    />
+                    <TweetsList isDarkMode={isDk} tweetData={tweets} />
+                </SafeAreaView>
+            </>
+        )
+
+        const errorView = (
+            <View style={backgroundStyle}>
+                <Text style={[this.styles.sectionTitle, textStyle]}>Sorry, something went wrong. :-(</Text>
+                <Text style={[this.styles.sectionDescription, textStyle]}>{this.state.errMessage}</Text>
+            </View>
+        )
+        return this.state.hasError ? errorView : routineView
     }
 
     styles = StyleSheet.create({
@@ -56,107 +101,17 @@ class App extends React.PureComponent<PropsType, StateType> {
         },
     })
 
-    constructor(props: unknown) {
-        super(props)
-        this.appearanceChangeHandler = this.appearanceChangeHandler.bind(this)
-        this.itemRenderHandler = this.itemRenderHandler.bind(this)
-    }
-
-    appearanceChangeHandler(manager: AppearanceManager): void {
-        this.setState(() => {
-            return { isDarkMode: manager.state.colorScheme === 'dark' }
-        })
-    }
-
-    itemRenderHandler({ item }: ListRenderItemInfo<Tweet>): React.ReactElement {
-        const auth_token = 'abcd'
-        const picSource: Source = {
-            uri: '',
-            headers: {
-                Authorization: `Bearer ${auth_token}`,
-            },
+    lightText = StyleSheet.create({
+        textColor: {
+            color: Colors.lighter
         }
-        return (
-            <TweetRow
-                tweet={item}
-                isDarkMode={this.state.isDarkMode}
-                profilePic={picSource}
-            />
-        )
-    }
+    })
 
-    keyExtractor( item : Tweet ): string {
-        return `${item.id}`
-    }
-
-    itemLayout(data: Tweet[] | null | undefined, index:number): LayoutParams {
-        return {length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index}
-    }
-
-    render(): JSX.Element {
-        const isDarkMode = this.state.isDarkMode
-        const backgroundStyle = {
-            backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    darkText = StyleSheet.create({
+        textColor: {
+            color: Colors.darker
         }
-        const tw1: Tweet = {
-            id: 737517909140856833,
-            text: 'My tweet',
-            createdAt: new Date(),
-            name: 'Roger',
-            screenName: 'Roger ramjet',
-            userImage: 'placeholder',
-            profileImageURL: '',
-            biggerProfileImageURL: '',
-        }
-        const tw2: Tweet = {
-            id: 737517909140856834,
-            text: 'My tweet',
-            createdAt: new Date(),
-            name: 'Roger',
-            screenName: 'Wily coyote',
-            userImage: 'placeholder',
-            profileImageURL: '',
-            biggerProfileImageURL: '',
-        }
-        const tw3: Tweet = {
-            id: 737517909140856835,
-            text: 'My tweet',
-            createdAt: new Date(),
-            name: 'Roger',
-            screenName: 'Roger ramjet',
-            userImage: 'placeholder',
-            profileImageURL: '',
-            biggerProfileImageURL: '',
-        }
-        const tweets = [ tw1, tw2, tw3 ]
-        const listHeaderComponent = (
-            <Header headerTitle="RTweetGettr" />
-        )
-        // Don't use arrow functions in Flatlist - performance issues otherwise
-        // https://codingislove.com/optimize-react-native-flatlist-performance/
-        //
-        // Can avoid
-        console.log(`######## rendering - darkMode: ${this.state.isDarkMode}`)
-        return (
-            <>
-                <AppearanceManager handler={this.appearanceChangeHandler} />
-                <SafeAreaView style={backgroundStyle}>
-                    <StatusBar
-                        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-                    />
-                    <FlatList
-                        ListHeaderComponent={listHeaderComponent}
-                        data={tweets}
-                        renderItem={this.itemRenderHandler}
-                        style={backgroundStyle}
-                        removeClippedSubviews={true}
-                        getItemLayout={this.itemLayoutHandler}
-                        keyExtractor={this.keyExtractorHandler}
-                    />
-                </SafeAreaView>
-            </>
-        )
-    }
+    })
 }
 
 export default App
