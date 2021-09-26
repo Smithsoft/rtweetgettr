@@ -1,32 +1,33 @@
 import React, { ErrorInfo } from 'react'
 import {
-    Appearance,
-    SafeAreaView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native'
+    NavigationComponent,
+    NavigationComponentProps,
+    Options,
+} from 'react-native-navigation'
+import { Appearance, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 import Colors from './UI/Colors'
 import AppearanceManager from './UI/AppearanceManager'
 import TweetsList from './UI/TweetsList'
 
 import { tweets } from './Model/FakeData'
+import Tweet from './Model/Tweet'
 
-type PropsType = unknown
+type PropsType = NavigationComponentProps
 
 type StateType = {
     isDarkMode: boolean
     hasError: boolean
     errMessage: string
+    tweets: Tweet[]
 }
 
-class App extends React.PureComponent<PropsType, StateType> {
+class HomeScreen extends NavigationComponent<PropsType, StateType> {
     state = {
         isDarkMode: Appearance.getColorScheme() === 'dark',
         hasError: false,
         errMessage: '',
+        tweets: []
     }
 
     constructor(props: PropsType) {
@@ -36,10 +37,11 @@ class App extends React.PureComponent<PropsType, StateType> {
 
     public static getDerivedStateFromError(err: Error): StateType {
         // Update state so the next render will show the fallback UI.
-        const updatedState = { 
-            isDarkMode: Appearance.getColorScheme() === 'dark', 
-            hasError: true, 
-            errMessage: `${err.name}: ${err.message}` 
+        const updatedState = {
+            isDarkMode: Appearance.getColorScheme() === 'dark',
+            hasError: true,
+            errMessage: `${err.name}: ${err.message}`,
+            tweets: []
         }
         return updatedState
     }
@@ -49,8 +51,11 @@ class App extends React.PureComponent<PropsType, StateType> {
     }
 
     appearanceChangeHandler(manager: AppearanceManager): void {
-        this.setState((prevState) => {
-            return { ...prevState, isDarkMode: manager.state.colorScheme === 'dark' }
+        this.setState(prevState => {
+            return {
+                ...prevState,
+                isDarkMode: manager.state.colorScheme === 'dark',
+            }
         })
     }
 
@@ -59,15 +64,14 @@ class App extends React.PureComponent<PropsType, StateType> {
         const backgroundStyle = {
             backgroundColor: isDk ? Colors.darker : Colors.lighter,
         }
-        const textStyle = isDk ? this.lightText.textColor : this.darkText.textColor
+        const textStyle = isDk
+            ? this.lightText.textColor
+            : this.darkText.textColor
 
         const routineView = (
             <>
                 <AppearanceManager handler={this.appearanceChangeHandler} />
                 <SafeAreaView style={backgroundStyle}>
-                    <StatusBar
-                        barStyle={isDk ? 'light-content' : 'dark-content'}
-                    />
                     <TweetsList isDarkMode={isDk} tweetData={tweets} />
                 </SafeAreaView>
             </>
@@ -75,8 +79,12 @@ class App extends React.PureComponent<PropsType, StateType> {
 
         const errorView = (
             <View style={backgroundStyle}>
-                <Text style={[this.styles.sectionTitle, textStyle]}>Sorry, something went wrong. :-(</Text>
-                <Text style={[this.styles.sectionDescription, textStyle]}>{this.state.errMessage}</Text>
+                <Text style={[this.styles.sectionTitle, textStyle]}>
+                    Sorry, something went wrong. :-(
+                </Text>
+                <Text style={[this.styles.sectionDescription, textStyle]}>
+                    {this.state.errMessage}
+                </Text>
             </View>
         )
         return this.state.hasError ? errorView : routineView
@@ -103,15 +111,30 @@ class App extends React.PureComponent<PropsType, StateType> {
 
     lightText = StyleSheet.create({
         textColor: {
-            color: Colors.lighter
-        }
+            color: Colors.lighter,
+        },
     })
 
     darkText = StyleSheet.create({
         textColor: {
-            color: Colors.darker
-        }
+            color: Colors.darker,
+        },
     })
+
+    static options: Options = {
+        topBar: {
+            title: {
+                text: 'Tweets',
+            },
+        },
+        bottomTab: {
+            text: 'Home',
+            icon: {
+                system: 'house.fill',
+                fallback: require('./Icons/home-solid.png'),
+            },
+        },
+    }
 }
 
-export default App
+export default HomeScreen

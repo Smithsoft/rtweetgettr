@@ -17,7 +17,7 @@ fi
 
 USER_ID=$(curl -s --request GET "https://api.twitter.com/2/users/by/username/plistinator" --header "Authorization: Bearer ${BEARER_TOKEN}" | jq --raw-output '.data.id')
 
-curl -s --request GET "https://api.twitter.com/2/users/${USER_ID}/tweets?expansions=attachments.media_keys,author_id,referenced_tweets.id&tweet.fields=author_id,created_at,id,text" --header "Authorization: Bearer ${BEARER_TOKEN}" | jq
+curl -s --request GET "https://api.twitter.com/2/users/${USER_ID}/tweets?tweet.fields=author_id,created_at,id,text&max_results=8&pagination_token=zldjwdz3w6sba13nesn479m3pviwsegx9874tson036" --header "Authorization: Bearer ${BEARER_TOKEN}" | jq
 
 # curl "https://api.twitter.com/2/users/${USER_ID}/tweets?expansions=attachments.media_keys,author_id,entities.mentions.username,geo.place_id,in_reply_to_user_id,referenced_tweets.id,referenced_tweets.id.author_id&tweet.fields=attachments,author_id,context_annotations,conversation_id,created_at,entities,geo,id,in_reply_to_user_id,lang,possibly_sensitive,public_metrics,referenced_tweets,reply_settings,source,text,withheld&user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld&place.fields=contained_within,country,country_code,full_name,geo,id,name,place_type&poll.fields=duration_minutes,end_datetime,id,options,voting_status&media.fields=duration_ms,height,media_key,preview_image_url,type,url,width,public_metrics,non_public_metrics,organic_metrics,promoted_metrics&max_results=5" -H "Authorization: Bearer $BEARER_TOKEN"
 
