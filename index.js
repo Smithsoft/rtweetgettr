@@ -1,23 +1,43 @@
 /**
  * @format
  */
-import { Navigation } from 'react-native-navigation'
-import App from './src/App'
 
-Navigation.registerComponent('com.myApp.WelcomeScreen', () => App)
+import { Navigation } from 'react-native-navigation'
+import HomeScreen from './src/HomeScreen'
+import SettingsScreen from './src/SettingsScreen'
+
+Navigation.registerComponent('Home', () => HomeScreen)
+Navigation.registerComponent('Settings', () => SettingsScreen)
 
 Navigation.events().registerAppLaunchedListener(() => {
     Navigation.setRoot({
         root: {
-            stack: {
+            bottomTabs: {
                 children: [
                     {
-                        component: {
-                            name: 'com.myApp.WelcomeScreen',
-                        },
+                        stack: {
+                            children: [
+                                {
+                                    component: {
+                                        name: 'Home',
+                                    },
+                                },
+                            ],
+                        },            
                     },
-                ],
-            },
+                    {
+                        stack: {
+                            children: [
+                                {
+                                    component: {
+                                        name: 'Settings',
+                                    },
+                                },
+                            ],
+                        },            
+                    }
+                ]
+            }
         },
     })
 })
