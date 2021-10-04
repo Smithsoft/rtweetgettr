@@ -8,15 +8,10 @@ import { Appearance, SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 import Colors from './UI/Colors'
 import AppearanceManager from './UI/AppearanceManager'
-import TweetsList from './UI/TweetsList'
 
-import { tweets } from './Model/FakeData'
-import Tweet from './Model/Tweet'
-import { TwitterClient } from './Model/TwitterClient'
 import ErrorData from './Types/ErrorData'
 import { RequestId } from './Service/TwitterService'
-
-import { DeviceEventEmitter } from 'react-native'
+import TweetsList from './UI/TweetsList'
 
 type PropsType = NavigationComponentProps
 
@@ -24,15 +19,13 @@ type StateType = {
     isDarkMode: boolean
     hasError: boolean
     errMessage: string
-    tweets: Tweet[]
 }
 
 class HomeScreen extends NavigationComponent<PropsType, StateType> {
     state = {
         isDarkMode: Appearance.getColorScheme() === 'dark',
         hasError: false,
-        errMessage: '',
-        tweets: []
+        errMessage: ''
     }
 
     private _requests: RequestId[] = []
@@ -40,7 +33,6 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
     constructor(props: PropsType) {
         super(props)
         this.appearanceChangeHandler = this.appearanceChangeHandler.bind(this)
-        this.handleTweetUpdates = this.handleTweetUpdates.bind(this)
     }
 
     public static getDerivedStateFromError(err: Error): StateType {
@@ -55,7 +47,7 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
     }
 
     handleTweetUpdates(tweets: Tweet[]): void {
-        console.log("#################")
+        console.log("################# handleTweetUpdates")
         console.log(tweets)
         this.setState((prevState) => { return { 
             ...prevState,
@@ -69,18 +61,10 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
 
     public componentDidMount(): void {
         console.log("Home screen mount")
-        TwitterClient.subscribe('TWEETS', this.handleTweetUpdates)
-        TwitterClient.subscribe('ERROR', this.handleError)
-        TwitterClient.instance
-            .setUserName("plistinator")
-            .setToken("AAAAAzzzzAAAAAAAC20TQEAAAAAIGwoEgMI0VKMfZH2g56bYC7Eo3g%3D2Ryo0rTT1qXC565i6c0zn8MD7h2X3MmEg5PIXwbLDahgDjq1rs")
-            .fetchTweetsForLoggedInUser()
     }
 
     componentWillUnmount(): void {
         console.log("Home screen unmount")
-        TwitterClient.instance.cancelRequests(this._requests)
-        this._requests = []
     }
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
@@ -106,14 +90,14 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
             : this.darkText.textColor
 
         console.log('######')
-        console.log(JSON.stringify(tweets))
-        console.log('######')
+        //console.log(JSON.stringify(tweets))
+        console.log('render')
 
         const routineView = (
             <>
                 <AppearanceManager handler={this.appearanceChangeHandler} />
                 <SafeAreaView style={backgroundStyle}>
-                    <TweetsList isDarkMode={isDk} tweetData={tweets} />
+                    <TweetsList isDarkMode={isDk} />
                 </SafeAreaView>
             </>
         )

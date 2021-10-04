@@ -3,17 +3,19 @@ import {
     Appearance,
     FlatList,
     ListRenderItemInfo,
+    RefreshControl,
     StyleSheet,
 } from 'react-native'
 import { Source } from 'react-native-fast-image'
 
 import Tweet from '../Model/Tweet'
-import AppearanceManager from './AppearanceManager'
+import { TwitterClient } from '../Model/TwitterClient'
 import Colors from './Colors'
 import Header from './RGHeader'
 import TweetRow from './TweetRow'
+import { tweets as tweetData } from '../Model/FakeData'
+import ITEM_HEIGHT from './Dimensions'
 
-const ITEM_HEIGHT = 44
 
 type LayoutParams = {
     length: number
@@ -29,20 +31,38 @@ const itemLayout = (
 }
 
 type PropsType = {
-    tweetData: Tweet[]
     isDarkMode: boolean
 }
 
-type StateType = unknown
+type StateType = {
+    isDarkMode: boolean
+    refreshing: boolean
+    tweets: Tweet[]
+}
 
 class TweetsList extends React.PureComponent<PropsType, StateType> {
     constructor(props: PropsType) {
         super(props)
         this.itemRenderHandler = this.itemRenderHandler.bind(this)
+        this.onRefreshHandler = this.onRefreshHandler.bind(this)
+        this.dataHandler = this.dataHandler.bind(this)
     }
 
     state = {
         isDarkMode: Appearance.getColorScheme() === 'dark',
+        refreshing: false,
+        tweets: tweetData
+    }
+
+    onRefreshHandler(): void {
+        this.setState((prevState) => {
+            return {
+                ...prevState,
+                refreshing: true
+            }
+        }, () => {
+            TwitterClient.instance.fetchTweetsForLoggedInUser()
+        })
     }
 
     itemRenderHandler({ item }: ListRenderItemInfo<Tweet>): React.ReactElement {
@@ -62,6 +82,22 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
         )
     }
 
+    dataHandler(tweetData: Tweet[]): void {
+        this.setState((prevState, props) => {
+            return {
+                ...prevState,
+                tweets: tweetData
+            }
+        })
+    }
+
+    componentDidMount(): void {
+        TwitterClient.subscribe('TWEETS', this.dataHandler)
+        TwitterClient.instance
+            .setToken("AAAAAAAAAAAAAAAAAAAAAC20TQEAAAAAIGwoEgMI0VKMfZH2g56bYC7Eo3g%3D2Ryo0rTT1qXC565i6c0zn8MD7h2X3MmEg5PIXwbLDahgDjq1rs")
+            .setUserName("plistinator")
+    }
+
     render(): JSX.Element {
         const listHeaderComponent = <Header headerTitle="RTweetGettr" />
 
@@ -70,23 +106,29 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
             backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
         }
 
-        const tweets = this.props.tweetData
-
         // Don't use arrow functions in Flatlist - performance issues otherwise
         // https://codingislove.com/optimize-react-native-flatlist-performance/
         //
         // Can avoid
         console.log(`######## rendering - darkMode: ${this.state.isDarkMode}`)
-        console.log(tweets)
+        console.log(this.state.tweets)
 
-        return <FlatList
-                    ListHeaderComponent={listHeaderComponent}
-                    data={tweets}
-                    renderItem={this.itemRenderHandler}
-                    style={backgroundStyle}
-                    removeClippedSubviews={true}
-                    getItemLayout={itemLayout}
-                />
+        return (
+            <FlatList
+                ListHeaderComponent={listHeaderComponent}
+                data={this.state.tweets}
+                renderItem={this.itemRenderHandler}
+                style={backgroundStyle}
+                removeClippedSubviews={true}
+                getItemLayout={itemLayout}
+                refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this.onRefreshHandler}
+                    />
+                  }
+            />
+        )
     }
 
     styles = StyleSheet.create({
@@ -107,6 +149,8 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
             fontWeight: '700',
         },
     })
+
+    public static ITEM_HEIGHT = 44
 }
 
 export default TweetsList
