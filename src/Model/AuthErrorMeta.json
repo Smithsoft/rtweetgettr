@@ -1,0 +1,45 @@
+{
+    "message": "Request failed with status code 401",
+    "name": "Error",
+    "stack": "Error: Request failed with status code 401\n    at createError (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:142678:26)\n    at settle (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:142670:61)\n    at onloadend (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:142441:59)\n    at call (native)\n    at dispatchEvent (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:30338:31)\n    at setReadyState (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:29498:29)\n    at __didCompleteResponse (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:29294:29)\n    at apply (native)\n    at anonymous (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:29410:52)\n    at apply (native)\n    at emit (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:4851:42)\n    at apply (native)\n    at __callFunction (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:5706:36)\n    at anonymous (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:5430:31)\n    at __guard (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:5657:15)\n    at callFunctionReturnFlushedQueue (http://localhost:8081/index.bundle?platform=ios&dev=true&minify=false&modulesOnly=false&runModule=true&app=org.reactjs.native.example.rtweetgettr:5429:21)",
+    "config": {
+        "url": "https://api.twitter.com/2/users/by/username/plistinator",
+        "method": "get",
+        "headers": {
+            "Accept": "application/json, text/plain, */*",
+            "Authorization": "Bearer AAAAAAAAAAAAC20TQEAAAAAIGwoEgMI0VKMfZH2g56bYC7Eo3g%3D2Ryo0rTT1qXC565i6c0zn8MD7h2X3MmEg5PIXwbLDahgDjq1rs"
+        },
+        "transformRequest": [
+            null
+        ],
+        "transformResponse": [
+            null
+        ],
+        "timeout": 0,
+        "xsrfCookieName": "XSRF-TOKEN",
+        "xsrfHeaderName": "X-XSRF-TOKEN",
+        "maxContentLength": -1,
+        "maxBodyLength": -1,
+        "cancelToken": {
+            "promise": {
+                "_h": 1,
+                "_i": 0,
+                "_j": null,
+                "_k": {
+                    "onRejected": null,
+                    "promise": {
+                        "_h": 0,
+                        "_i": 0,
+                        "_j": null,
+                        "_k": null
+                    }
+                }
+            }
+        },
+        "transitional": {
+            "silentJSONParsing": true,
+            "forcedJSONParsing": true,
+            "clarifyTimeoutError": false
+        }
+    }
+}
