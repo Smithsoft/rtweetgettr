@@ -46,15 +46,6 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         return updatedState
     }
 
-    handleTweetUpdates(tweets: Tweet[]): void {
-        console.log("################# handleTweetUpdates")
-        console.log(tweets)
-        this.setState((prevState) => { return { 
-            ...prevState,
-            tweets
-        } })
-    }
-
     handleError(error: ErrorData): void {
         console.log(error)
     }

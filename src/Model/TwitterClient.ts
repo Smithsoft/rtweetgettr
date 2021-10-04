@@ -3,7 +3,7 @@ import TwitterServiceClient from "../Service/TwitterServiceClient"
 import ErrorData from "../Types/ErrorData"
 import TweetDataResponse from "../Types/TweetDataResponse"
 import Tweet from "./Tweet"
-import { DeviceEventEmitter } from "react-native"
+import { DeviceEventEmitter, EmitterSubscription } from "react-native"
 import UserData from "../Types/UserData"
 import { ErrorInfo } from "react"
 import TweetData from "../Types/TweetData"
@@ -35,8 +35,8 @@ class TwitterClient implements TwitterServiceClient {
     // Singleton
     private static [instanceName]: TwitterClient | null = null
 
-    static subscribe(result: ServiceResult, handler: TweetDataHandler | ErrorHandler): void {
-        DeviceEventEmitter.addListener(result, handler)
+    static subscribe(result: ServiceResult, handler: TweetDataHandler | ErrorHandler): EmitterSubscription {
+        return DeviceEventEmitter.addListener(result, handler)
     }
 
     static get instance(): TwitterClient {
@@ -71,15 +71,26 @@ class TwitterClient implements TwitterServiceClient {
     }
 
     handleData(results: TweetDataResponse): void {
-        // console.log("Results")
-        // console.log(results)
+        console.log("Results")
+        // console.log(JSON.stringify(results))
+        const userInfo: UserData[] = results.includes?.users ?? []
+        console.log(JSON.stringify(userInfo))
         const tweetData: Tweet[] = results.data.map((t) => {
+            const ix = userInfo.findIndex((u) => { u.id === t.author_id })
+            console.log(`index: ${ix}`)
+            console.log(userInfo[ix])
+            const authorName = (ix === -1) 
+                ? "Egg"
+                : userInfo[ix].username
+            const screenName = (ix === -1)
+                ? "Egg name"
+                : userInfo[ix].name
             return { 
                 id: parseInt(t.id),
                 text: t.text, 
                 createdAt: new Date(t.created_at),
-                name: t.author_id,
-                screenName: t.author_id,
+                name: authorName,
+                screenName: screenName,
                 userImage: "",
                 profileImageURL: "",
                 biggerProfileImageURL: ""
