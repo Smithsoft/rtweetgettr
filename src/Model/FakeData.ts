@@ -1,15 +1,17 @@
+import Tweet from "./Tweet"
+
 const tw1: Tweet = {
-    id: 737517909140856833,
+    id: 737517906833,
     text: 'My tweet',
     createdAt: new Date(),
-    name: 'Roger',
+    name: 'Brian',
     screenName: 'Roger ramjet',
     userImage: 'placeholder',
     profileImageURL: '',
     biggerProfileImageURL: '',
 }
 const tw2: Tweet = {
-    id: 737517909140856834,
+    id: 737514856834,
     text: 'My tweet',
     createdAt: new Date(),
     name: 'Roger',
@@ -19,11 +21,11 @@ const tw2: Tweet = {
     biggerProfileImageURL: '',
 }
 const tw3: Tweet = {
-    id: 737517909140856835,
+    id: 73751796835,
     text: 'My tweet',
     createdAt: new Date(),
-    name: 'Roger',
-    screenName: 'Roger ramjet',
+    name: 'Myrna',
+    screenName: 'Myra ramjet',
     userImage: 'placeholder',
     profileImageURL: '',
     biggerProfileImageURL: '',
