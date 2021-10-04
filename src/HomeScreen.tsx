@@ -12,6 +12,11 @@ import TweetsList from './UI/TweetsList'
 
 import { tweets } from './Model/FakeData'
 import Tweet from './Model/Tweet'
+import { TwitterClient } from './Model/TwitterClient'
+import ErrorData from './Types/ErrorData'
+import { RequestId } from './Service/TwitterService'
+
+import { DeviceEventEmitter } from 'react-native'
 
 type PropsType = NavigationComponentProps
 
@@ -30,9 +35,12 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         tweets: []
     }
 
+    private _requests: RequestId[] = []
+
     constructor(props: PropsType) {
         super(props)
         this.appearanceChangeHandler = this.appearanceChangeHandler.bind(this)
+        this.handleTweetUpdates = this.handleTweetUpdates.bind(this)
     }
 
     public static getDerivedStateFromError(err: Error): StateType {
@@ -44,6 +52,35 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
             tweets: []
         }
         return updatedState
+    }
+
+    handleTweetUpdates(tweets: Tweet[]): void {
+        console.log("#################")
+        console.log(tweets)
+        this.setState((prevState) => { return { 
+            ...prevState,
+            tweets
+        } })
+    }
+
+    handleError(error: ErrorData): void {
+        console.log(error)
+    }
+
+    public componentDidMount(): void {
+        console.log("Home screen mount")
+        TwitterClient.subscribe('TWEETS', this.handleTweetUpdates)
+        TwitterClient.subscribe('ERROR', this.handleError)
+        TwitterClient.instance
+            .setUserName("plistinator")
+            .setToken("AAAAAzzzzAAAAAAAC20TQEAAAAAIGwoEgMI0VKMfZH2g56bYC7Eo3g%3D2Ryo0rTT1qXC565i6c0zn8MD7h2X3MmEg5PIXwbLDahgDjq1rs")
+            .fetchTweetsForLoggedInUser()
+    }
+
+    componentWillUnmount(): void {
+        console.log("Home screen unmount")
+        TwitterClient.instance.cancelRequests(this._requests)
+        this._requests = []
     }
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
@@ -67,6 +104,10 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         const textStyle = isDk
             ? this.lightText.textColor
             : this.darkText.textColor
+
+        console.log('######')
+        console.log(JSON.stringify(tweets))
+        console.log('######')
 
         const routineView = (
             <>
@@ -129,6 +170,10 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         },
         bottomTab: {
             text: 'Home',
+            iconColor: Colors.dark,
+            textColor: Colors.dark,
+            selectedTextColor: Colors.primary,
+            selectedIconColor: Colors.primary,
             icon: {
                 system: 'house.fill',
                 fallback: require('./Icons/home-solid.png'),

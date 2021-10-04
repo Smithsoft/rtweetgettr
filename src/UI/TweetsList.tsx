@@ -15,8 +15,6 @@ import TweetRow from './TweetRow'
 
 const ITEM_HEIGHT = 44
 
-const keyExtractor = (item: Tweet): string => `${item.id}`
-
 type LayoutParams = {
     length: number
     offset: number
@@ -79,6 +77,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
         //
         // Can avoid
         console.log(`######## rendering - darkMode: ${this.state.isDarkMode}`)
+        console.log(tweets)
 
         return <FlatList
                     ListHeaderComponent={listHeaderComponent}
@@ -87,7 +86,6 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
                     style={backgroundStyle}
                     removeClippedSubviews={true}
                     getItemLayout={itemLayout}
-                    keyExtractor={keyExtractor}
                 />
     }
 

@@ -1,0 +1,13 @@
+{
+    "errors": [
+      {
+        "value": "12341234",
+        "detail": "Could not find user with id: [12341234].",
+        "title": "Not Found Error",
+        "resource_type": "user",
+        "parameter": "id",
+        "resource_id": "12341234",
+        "type": "https://api.twitter.com/2/problems/resource-not-found"
+      }
+    ]
+  }
