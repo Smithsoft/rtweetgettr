@@ -7,7 +7,7 @@
         "method": "get",
         "headers": {
             "Accept": "application/json, text/plain, */*",
-            "Authorization": "Bearer AAAAAAAAAAAAC20TQEAAAAAIGwoEgMI0VKMfZH2g56bYC7Eo3g%3D2Ryo0rTT1qXC565i6c0zn8MD7h2X3MmEg5PIXwbLDahgDjq1rs"
+            "Authorization": "Bxxxxx XXXXXXXX"
         },
         "transformRequest": [
             null
