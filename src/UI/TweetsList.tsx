@@ -99,7 +99,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
         console.log("TweetsList mounting ########")
         this._tweetsSubscription = TwitterClient.subscribe('TWEETS', this.dataHandler)
         TwitterClient.instance
-            .setToken("AAAAAAAAAAAAAAAAAAAAAC20TQEAAAAAIGwoEgMI0VKMfZH2g56bYC7Eo3g%3D2Ryo0rTT1qXC565i6c0zn8MD7h2X3MmEg5PIXwbLDahgDjq1rs")
+            .setToken("XXXXXXXX")
             .setUserName("plistinator")
     }
 
