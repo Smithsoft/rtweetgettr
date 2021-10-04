@@ -1,12 +1,15 @@
+import ErrorData from "./ErrorData";
+import ParamError from "./ParamError";
+
 /** 
- * Information for a Twitter response where the API call fails and the
- * request results in http errors.
+ * Top level structure for Twitter API error report
  */
 interface ErrorResponse {
-    title: string,
-    detail: string,
-    type: string,
-    status: number
+    errors?: ParamError[] | ErrorData[]
+    title?: string,
+    detail?: string,
+    type?: string,
+    status?: number
 }
 
 export default ErrorResponse
