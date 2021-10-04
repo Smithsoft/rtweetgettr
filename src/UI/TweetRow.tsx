@@ -4,6 +4,7 @@ import FastImage, { Source } from 'react-native-fast-image'
 import { View, Text, StyleSheet } from 'react-native'
 import Colors from './Colors'
 import Tweet from '../Model/Tweet'
+import ITEM_HEIGHT from './Dimensions'
 
 type PropType = {
     tweet: Tweet
@@ -15,11 +16,11 @@ class TweetRow extends React.PureComponent<PropType> {
     render(): JSX.Element {
         return (
             <View style={styles.sectionContainer}>
-                <FastImage
+                {/* <FastImage
                     style={{ width: 200, height: 200 }}
                     source={this.props.profilePic}
                     resizeMode={FastImage.resizeMode.contain}
-                />
+                /> */}
                 <Text
                     style={[
                         styles.sectionTitle,
@@ -49,15 +50,20 @@ class TweetRow extends React.PureComponent<PropType> {
 
 const styles = StyleSheet.create({
     sectionContainer: {
-        marginTop: 32,
-        paddingHorizontal: 24,
+        height: ITEM_HEIGHT,
+        backgroundColor: Colors.light,
+        marginTop: 3,
+        paddingHorizontal: 12,
+        padding: 4,
+        borderBottomColor: Colors.dark,
+        borderBottomWidth: StyleSheet.hairlineWidth
     },
     sectionTitle: {
         fontSize: 24,
         fontWeight: '600',
     },
     sectionDescription: {
-        marginTop: 8,
+        marginTop: 3,
         fontSize: 18,
         fontWeight: '400',
     },

@@ -71,8 +71,8 @@ class TwitterClient implements TwitterServiceClient {
     }
 
     handleData(results: TweetDataResponse): void {
-        console.log("Results")
-        console.log(results)
+        // console.log("Results")
+        // console.log(results)
         const tweetData: Tweet[] = results.data.map((t) => {
             return { 
                 id: parseInt(t.id),

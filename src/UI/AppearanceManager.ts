@@ -24,7 +24,7 @@ class AppearanceManager extends React.Component<PropsType, StateType> {
     }
 
     componentWillUnmount(): void {
-        Appearance.removeChangeListener(this.handleAppearanceChange)
+        //Appearance.removeChangeListener(this.handleAppearanceChange)
     }
 
     handleAppearanceChange(

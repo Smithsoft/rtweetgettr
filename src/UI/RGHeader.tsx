@@ -32,7 +32,7 @@ class RGHeader extends React.Component<PropsType, StateType> {
     }
 
     componentWillUnmount(): void {
-        Appearance.removeChangeListener(this.handleAppearanceChange)
+        //Appearance.removeChangeListener(this.handleAppearanceChange)
     }
 
     handleAppearanceChange(
@@ -46,22 +46,12 @@ class RGHeader extends React.Component<PropsType, StateType> {
 
     styles = StyleSheet.create({
         background: {
-            paddingBottom: 40,
-            paddingTop: 96,
+            alignItems: 'center',
+            paddingBottom: 20,
+            paddingTop: 32,
             paddingHorizontal: 32,
-        },
-        logo: {
-            opacity: 0.2,
-            overflow: 'visible',
-            resizeMode: 'cover',
-            /*
-             * These negative margins allow the image to be offset similarly across screen sizes and component sizes.
-             *
-             * The source logo.png image is 512x512px, so as such, these margins attempt to be relative to the
-             * source image's size.
-             */
-            marginLeft: -128,
-            marginBottom: -192,
+            borderBottomWidth: 2,
+            borderBottomColor: Colors.light
         },
         text: {
             fontSize: 40,
@@ -87,7 +77,7 @@ class RGHeader extends React.Component<PropsType, StateType> {
         const logoHeight = 790.67423
 
         return (
-            <View style={imageBackgroundStyling}>
+            <View style={[this.styles.background, imageBackgroundStyling]}>
                 <HeaderLogo height={logoHeight/4} width={logoWidth/4} />
                 <Text style={[this.styles.text, textStyling]}>
                     {this.props.headerTitle}
