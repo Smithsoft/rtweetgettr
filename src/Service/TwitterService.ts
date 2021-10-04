@@ -44,6 +44,7 @@ class TwitterService {
     private _cancelTokens = axios.CancelToken.source()
 
     errorHandler(error: AxiosError<ErrorResponse>): void {
+        console.log(JSON.stringify(error));
         if (error.response?.status === 401) {
             this._client.handleTokenExpiry()
             this.fetchResult = 'TOKEN_EXPIRED'
