@@ -114,18 +114,39 @@ class TwitterService {
             'id',
             'text'
         ]
+        const expansions = [
+            'author_id'
+        ]
         const resourceName = userId
         const rq = this.cancellation({ url, resourceName })
         const params: AxiosRequestConfig = {
             ...this.conf(),
             cancelToken: rq.cancel.token,
             params: {
-                'tweet.fields': fields.join()
+                'expansions': expansions.join(),
+                'tweet.fields': fields.join(),
             }
         }
         axios
             .get<TweetDataResponse>(url, params)
             .then((response) => {
+                this._client.handleData(response.data)
+                console.log(JSON.stringify(response.data))
+            })
+    }
+
+    fetchUserDataById(userId: string): void {
+        const url = `https://api.twitter.com/1.1/users/show.json`
+        const params: AxiosRequestConfig = {
+            ...this.conf(),
+            params: {
+                'user_id': userId
+            }
+        }
+        axios
+            .get<TweetDataResponse>(url, params)
+            .then((response) => {
+                console.log(JSON.stringify(response.data))
                 this._client.handleData(response.data)
             })
     }

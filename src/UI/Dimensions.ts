@@ -1,3 +1,3 @@
-const ITEM_HEIGHT = 44
+const ITEM_HEIGHT = 88
 
 export default ITEM_HEIGHT

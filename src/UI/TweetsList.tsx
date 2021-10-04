@@ -1,6 +1,7 @@
 import React from 'react'
 import {
     Appearance,
+    EmitterSubscription,
     FlatList,
     ListRenderItemInfo,
     RefreshControl,
@@ -54,6 +55,8 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
         tweets: tweetData
     }
 
+    private _tweetsSubscription?: EmitterSubscription
+
     onRefreshHandler(): void {
         this.setState((prevState) => {
             return {
@@ -86,16 +89,23 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
         this.setState((prevState, props) => {
             return {
                 ...prevState,
+                refreshing: false,
                 tweets: tweetData
             }
         })
     }
 
     componentDidMount(): void {
-        TwitterClient.subscribe('TWEETS', this.dataHandler)
+        console.log("TweetsList mounting ########")
+        this._tweetsSubscription = TwitterClient.subscribe('TWEETS', this.dataHandler)
         TwitterClient.instance
             .setToken("AAAAAAAAAAAAAAAAAAAAAC20TQEAAAAAIGwoEgMI0VKMfZH2g56bYC7Eo3g%3D2Ryo0rTT1qXC565i6c0zn8MD7h2X3MmEg5PIXwbLDahgDjq1rs")
             .setUserName("plistinator")
+    }
+
+    componentWillUnmount(): void {
+        console.log("####### Tweetslist component Will unmount")
+        this._tweetsSubscription?.remove()
     }
 
     render(): JSX.Element {
