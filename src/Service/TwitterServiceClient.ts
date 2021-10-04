@@ -9,6 +9,7 @@ interface TwitterServiceClient {
     token: string | null
     handleError: ErrorHandler
     handleData: TweetDataHandler
+    updateUser: (userId: string) => void
     handleTokenExpiry: () => void
 }
 

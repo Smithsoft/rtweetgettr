@@ -17,6 +17,18 @@ class SettingsScreen extends NavigationComponent<PropsType, StateType> {
         this.loginPressHandler = this.loginPressHandler.bind(this)
     }
 
+    componentDidUpdate() {
+        console.log("Settings screen updated")
+    }
+
+    componentWillUnmount() {
+        console.log("Settings screen unmount")
+    }
+
+    componentDidMount() {
+        console.log("Settings screen did mount")
+    }
+
     loginPressHandler(): void {
         TwitterClient.instance.login()
     }
@@ -100,11 +112,15 @@ class SettingsScreen extends NavigationComponent<PropsType, StateType> {
         },
         bottomTab: {
             text: "Settings",
+            iconColor: Colors.dark,
+            textColor: Colors.dark,
+            selectedTextColor: Colors.primary,
+            selectedIconColor: Colors.primary,
             icon: {
                 system: 'gearshape.fill',
                 fallback: require('./Icons/cog-solid.png')
             }
-        }
+        },
     }
 }
 
