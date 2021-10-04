@@ -24,4 +24,4 @@ Try these out by setting the values in a file `.env` in the root of where this p
 BEARER_TOKEN=XXXXXXXXXXXXX
 ```
 
-Where there `XXXX` is something like `AAAA...` - the actual Twitter API bearer token.
+Where there `XXXX` is something like `AAAA...` - the actual Twitter API bearer token. 
