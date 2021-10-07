@@ -7,12 +7,11 @@ import TweetDataResponse from "../Types/TweetDataResponse";
 import TwitterServiceClient from "./TwitterServiceClient";
 import RequestInFlight from "../Types/RequestInFlight"
 
-import { EventEmitter } from 'react-native'
-
 // USER_ID=$(curl -s --request GET "https://api.twitter.com/2/users/by/username/plistinator" --header "Authorization: Bearer ${BEARER_TOKEN}" | jq --raw-output '.data.id')
 // {"data":{"id":"2421631333","name":"Plistinator","username":"plistinator"}}
 
 // curl -s --request GET "https://api.twitter.com/2/users/${USER_ID}/tweets?expansions=attachments.media_keys,author_id,referenced_tweets.id&tweet.fields=author_id,created_at,id,text" --header "Authorization: Bearer ${BEARER_TOKEN}" | jq
+
 
 interface UserDataPayload {
     data: UserData
@@ -115,16 +114,23 @@ class TwitterService {
             'text'
         ]
         const expansions = [
-            'author_id'
+            'attachments.media_keys',
+            'author_id',
+            'entities.mentions.username',
+            'geo.place_id',
+            'in_reply_to_user_id',
+            'referenced_tweets.id',
+            'referenced_tweets.id.author_id'
         ]
-        const resourceName = userId
-        const rq = this.cancellation({ url, resourceName })
+        const max_results = 8
+        const rq = this.cancellation({ url, 'resourceName': userId })
         const params: AxiosRequestConfig = {
             ...this.conf(),
             cancelToken: rq.cancel.token,
             params: {
                 'expansions': expansions.join(),
                 'tweet.fields': fields.join(),
+                max_results
             }
         }
         axios
@@ -136,11 +142,16 @@ class TwitterService {
     }
 
     fetchUserDataById(userId: string): void {
-        const url = `https://api.twitter.com/1.1/users/show.json`
+        const url = `https://api.twitter.com/2/users/${userId}`
+        const fields = [
+            'profile_image_url',
+            'public_metrics',
+            'verified'
+        ]
         const params: AxiosRequestConfig = {
             ...this.conf(),
             params: {
-                'user_id': userId
+                'user.fields': fields.join()
             }
         }
         axios

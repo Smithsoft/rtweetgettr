@@ -15,7 +15,10 @@ import Colors from './Colors'
 import Header from './RGHeader'
 import TweetRow from './TweetRow'
 import { tweets as tweetData } from '../Model/FakeData'
-import ITEM_HEIGHT from './Dimensions'
+import { ITEM_HEIGHT } from './Dims'
+
+import Config from 'react-native-config'
+import { Dimensions } from 'react-native';
 
 
 type LayoutParams = {
@@ -28,7 +31,7 @@ const itemLayout = (
     data: Tweet[] | null | undefined,
     index: number,
 ): LayoutParams => {
-    return { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index }
+    return { length: Dimensions.get("screen").width, offset: ITEM_HEIGHT * index, index }
 }
 
 type PropsType = {
@@ -57,6 +60,10 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
 
     private _tweetsSubscription?: EmitterSubscription
 
+    onScreenChangeHandler(): void {
+
+    }
+
     onRefreshHandler(): void {
         this.setState((prevState) => {
             return {
@@ -71,7 +78,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
     itemRenderHandler({ item }: ListRenderItemInfo<Tweet>): React.ReactElement {
         const auth_token = 'abcd'
         const picSource: Source = {
-            uri: '',
+            uri: item.profileImageURL,
             headers: {
                 Authorization: `Bearer ${auth_token}`,
             },
@@ -96,14 +103,19 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
     }
 
     componentDidMount(): void {
-        console.log("TweetsList mounting ########")
+        Dimensions.addEventListener("change", this.onScreenChangeHandler)
+        const token = Config.BEARER_TOKEN
+        const user = Config.USER_NAME
+        console.log(`TweetsList mounting ######## - ${token} - ${user}`)
         this._tweetsSubscription = TwitterClient.subscribe('TWEETS', this.dataHandler)
         TwitterClient.instance
-            .setToken("XXXXXXXX")
-            .setUserName("plistinator")
+            .setToken(token)
+            .setUserName(user)
+            .fetchTweetsForLoggedInUser()
     }
 
     componentWillUnmount(): void {
+        Dimensions.removeEventListener("change", this.onScreenChangeHandler)
         console.log("####### Tweetslist component Will unmount")
         this._tweetsSubscription?.remove()
     }

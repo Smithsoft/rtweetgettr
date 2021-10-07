@@ -14,9 +14,15 @@ export type ServiceResult = 'TWEETS' | 'USER' | 'ERROR'
 // and can be used for weakly hiding computed property names
 const instanceName = Symbol()
 
+const DEFAULT_PROFILE_IMAGE_URL = "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"
+const DEFAULT_BIGGER_IMAGE_URL = "https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png"
+
 type TweetDataHandler = (results: Tweet[]) => void
 type ErrorHandler = (error: ErrorData) => void
 
+function largerProfileImageURLFromNormal(normalProfileURL: string): string {
+    return normalProfileURL.replace('_normal', '_bigger')
+}
 
 class TwitterClient implements TwitterServiceClient {
 
@@ -31,6 +37,10 @@ class TwitterClient implements TwitterServiceClient {
 
     /** The users username if known, or null if not known */
     userName: string | null = null
+
+    knownUsers = new Map<string, UserData>()
+
+    tweetsQueue: Tweet[] = []
 
     // Singleton
     private static [instanceName]: TwitterClient | null = null
@@ -54,6 +64,29 @@ class TwitterClient implements TwitterServiceClient {
         this.updateUser = this.updateUser.bind(this)
     }
 
+    accumulateUserRecord(userRecord: UserData): void {
+        this.knownUsers.set(userRecord.id, userRecord)
+    }
+
+    accumulateTweetRecord(tweetRecord: TweetData): void {
+        const author = this.knownUsers.has(tweetRecord.author_id)
+            ? this.knownUsers.get(tweetRecord.author_id)
+            : undefined
+        const biggerImageURL = author?.profile_image_url 
+            ? largerProfileImageURLFromNormal(author?.profile_image_url)
+            : DEFAULT_BIGGER_IMAGE_URL
+        this.tweetsQueue.push({ 
+            id: parseInt(tweetRecord.id),
+            text: tweetRecord.text, 
+            createdAt: new Date(tweetRecord.created_at),
+            name: author?.name ?? "Egg",
+            screenName: author?.username ?? "Egg name",
+            userImage: "",
+            profileImageURL: author?.profile_image_url ?? DEFAULT_PROFILE_IMAGE_URL,
+            biggerProfileImageURL: biggerImageURL,
+        })
+    }
+
     setUserName(name: string): TwitterClient {
         this.userName = name
         return this
@@ -71,32 +104,9 @@ class TwitterClient implements TwitterServiceClient {
     }
 
     handleData(results: TweetDataResponse): void {
-        console.log("Results")
-        // console.log(JSON.stringify(results))
-        const userInfo: UserData[] = results.includes?.users ?? []
-        console.log(JSON.stringify(userInfo))
-        const tweetData: Tweet[] = results.data.map((t) => {
-            const ix = userInfo.findIndex((u) => { u.id === t.author_id })
-            console.log(`index: ${ix}`)
-            console.log(userInfo[ix])
-            const authorName = (ix === -1) 
-                ? "Egg"
-                : userInfo[ix].username
-            const screenName = (ix === -1)
-                ? "Egg name"
-                : userInfo[ix].name
-            return { 
-                id: parseInt(t.id),
-                text: t.text, 
-                createdAt: new Date(t.created_at),
-                name: authorName,
-                screenName: screenName,
-                userImage: "",
-                profileImageURL: "",
-                biggerProfileImageURL: ""
-            }
-        })
-        this.emitEvent('TWEETS', tweetData)
+        results.includes?.users?.forEach(this.accumulateUserRecord, this)
+        results.data?.forEach(this.accumulateTweetRecord, this)
+        this.emitEvent('TWEETS', this.tweetsQueue)
     }
 
     handleError(error: ErrorData): void {
