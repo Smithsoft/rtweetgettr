@@ -66,6 +66,8 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         flex: 1,
+        flexDirection: 'column',
+        
     },
     sectionTitle: {
         fontSize: 24,

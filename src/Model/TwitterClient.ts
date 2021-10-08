@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import TwitterService, { RequestId } from "../Service/TwitterService"
 import TwitterServiceClient from "../Service/TwitterServiceClient"
 import ErrorData from "../Types/ErrorData"
 import TweetDataResponse from "../Types/TweetDataResponse"
 import Tweet from "./Tweet"
 import { DeviceEventEmitter, EmitterSubscription } from "react-native"
-import UserData from "../Types/UserData"
+import UserData from '../Types/UserData';
 import { ErrorInfo } from "react"
 import TweetData from "../Types/TweetData"
 
@@ -24,6 +25,24 @@ function largerProfileImageURLFromNormal(normalProfileURL: string): string {
     return normalProfileURL.replace('_normal', '_bigger')
 }
 
+type ServiceDataTypes = 'TWEETS' | 'USER_DETAIL' | 'USER_BRIEF'
+
+function tweetFromTweetRecord(author: UserData, tweetRecord: TweetData): Tweet {
+    const biggerImageURL = author.profile_image_url 
+        ? largerProfileImageURLFromNormal(author.profile_image_url)
+        : DEFAULT_BIGGER_IMAGE_URL
+    return { 
+        id: parseInt(tweetRecord.id),
+        text: tweetRecord.text, 
+        createdAt: new Date(tweetRecord.created_at),
+        name: author?.name ?? "Egg",
+        screenName: author?.username ?? "Egg name",
+        userImage: "",
+        profileImageURL: author?.profile_image_url ?? DEFAULT_PROFILE_IMAGE_URL,
+        biggerProfileImageURL: biggerImageURL
+    }
+}
+
 class TwitterClient implements TwitterServiceClient {
 
     /** Delegate service logic to Twitter service */
@@ -38,6 +57,7 @@ class TwitterClient implements TwitterServiceClient {
     /** The users username if known, or null if not known */
     userName: string | null = null
 
+    /** Cache of users seen by the app - TODO implement LRU */
     knownUsers = new Map<string, UserData>()
 
     tweetsQueue: Tweet[] = []
@@ -72,19 +92,12 @@ class TwitterClient implements TwitterServiceClient {
         const author = this.knownUsers.has(tweetRecord.author_id)
             ? this.knownUsers.get(tweetRecord.author_id)
             : undefined
-        const biggerImageURL = author?.profile_image_url 
-            ? largerProfileImageURLFromNormal(author?.profile_image_url)
-            : DEFAULT_BIGGER_IMAGE_URL
-        this.tweetsQueue.push({ 
-            id: parseInt(tweetRecord.id),
-            text: tweetRecord.text, 
-            createdAt: new Date(tweetRecord.created_at),
-            name: author?.name ?? "Egg",
-            screenName: author?.username ?? "Egg name",
-            userImage: "",
-            profileImageURL: author?.profile_image_url ?? DEFAULT_PROFILE_IMAGE_URL,
-            biggerProfileImageURL: biggerImageURL,
-        })
+        if (author?.profile_image_url) {
+            const tweet = tweetFromTweetRecord(author, tweetRecord)
+            this.tweetsQueue.push(tweet)
+        } else {
+            this.twitter.fetchUserDataById(tweetRecord.author_id)
+        }
     }
 
     setUserName(name: string): TwitterClient {
@@ -103,9 +116,25 @@ class TwitterClient implements TwitterServiceClient {
         })
     }
 
+    upsertUser(user: UserData): void {
+        if (this.knownUsers.has(user.id)) {
+            const existUser = this.knownUsers.get(user.id)!
+            this.knownUsers.set(user.id, {
+                ...existUser,
+                ...user
+            })
+        } else {
+            this.knownUsers.set(user.id, user)
+        }
+    }
+
     handleData(results: TweetDataResponse): void {
         results.includes?.users?.forEach(this.accumulateUserRecord, this)
-        results.data?.forEach(this.accumulateTweetRecord, this)
+        if (Array.isArray(results.data)) {
+            results.data?.forEach(this.accumulateTweetRecord, this)
+        } else {
+            this.upsertUser(results.data)
+        }
         this.emitEvent('TWEETS', this.tweetsQueue)
     }
 
@@ -142,8 +171,6 @@ class TwitterClient implements TwitterServiceClient {
     }
 
     fetchTweetsForLoggedInUser(): void {
-
-        console.log(`fetchTweetsForLoggedInUser ${this.userId} - ${this.userName}`)
         if (this.userId === null) {
 
             // User id not current - attempt login
