@@ -60,7 +60,7 @@ class TwitterClient implements TwitterServiceClient {
     /** Cache of users seen by the app - TODO implement LRU */
     knownUsers = new Map<string, UserData>()
 
-    tweetsQueue: Tweet[] = []
+    tweetsQueue: TweetData[] = []
 
     // Singleton
     private static [instanceName]: TwitterClient | null = null
@@ -89,15 +89,7 @@ class TwitterClient implements TwitterServiceClient {
     }
 
     accumulateTweetRecord(tweetRecord: TweetData): void {
-        const author = this.knownUsers.has(tweetRecord.author_id)
-            ? this.knownUsers.get(tweetRecord.author_id)
-            : undefined
-        if (author?.profile_image_url) {
-            const tweet = tweetFromTweetRecord(author, tweetRecord)
-            this.tweetsQueue.push(tweet)
-        } else {
-            this.twitter.fetchUserDataById(tweetRecord.author_id)
-        }
+
     }
 
     setUserName(name: string): TwitterClient {
@@ -128,14 +120,40 @@ class TwitterClient implements TwitterServiceClient {
         }
     }
 
+    /** Reducer that demuxes possible data responses into displayable tweets */
     handleData(results: TweetDataResponse): void {
+        console.log('######### handleData ########')
+        console.log(results)
         results.includes?.users?.forEach(this.accumulateUserRecord, this)
+        const publishedTweets: Tweet[] = []
         if (Array.isArray(results.data)) {
-            results.data?.forEach(this.accumulateTweetRecord, this)
+            // Got tweets, publish ones where the author data is known, queue the rest
+            results.data.forEach((tweetRecord) => {
+                const author = this.knownUsers.has(tweetRecord.author_id)
+                    ? this.knownUsers.get(tweetRecord.author_id)
+                    : undefined
+                if (author?.profile_image_url) {
+                    publishedTweets.push(tweetFromTweetRecord(author, tweetRecord))
+                } else {
+                    this.twitter.fetchUserDataById(tweetRecord.author_id)
+                    this.tweetsQueue.push(tweetRecord)
+                }
+            })
         } else {
+            // Got user record, complete tweets we can
+            const user = results.data
             this.upsertUser(results.data)
+            const completedTweets = this.tweetsQueue.filter((tweetData) => tweetData.author_id === user.id)
+            if (completedTweets.length > 0) {
+                const toBeRemoved: string[] = []
+                completedTweets.forEach((tweetData) => {
+                    toBeRemoved.push(tweetData.id)
+                    publishedTweets.push(tweetFromTweetRecord(user, tweetData))
+                })
+                this.tweetsQueue = this.tweetsQueue.filter((twd) => toBeRemoved.indexOf(twd.id) != -1)
+            }
         }
-        this.emitEvent('TWEETS', this.tweetsQueue)
+        this.emitEvent('TWEETS', publishedTweets)
     }
 
     handleError(error: ErrorData): void {
