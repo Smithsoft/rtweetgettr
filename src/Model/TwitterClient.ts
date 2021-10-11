@@ -88,10 +88,6 @@ class TwitterClient implements TwitterServiceClient {
         this.knownUsers.set(userRecord.id, userRecord)
     }
 
-    accumulateTweetRecord(tweetRecord: TweetData): void {
-
-    }
-
     setUserName(name: string): TwitterClient {
         this.userName = name
         return this
@@ -120,10 +116,11 @@ class TwitterClient implements TwitterServiceClient {
         }
     }
 
+    //// EXERCISE FOR THE READER - 
+    ////  Write this like a React reducer using actions & state
+    ////  with the 3 different cases, and immutable data
     /** Reducer that demuxes possible data responses into displayable tweets */
     handleData(results: TweetDataResponse): void {
-        console.log('######### handleData ########')
-        console.log(results)
         results.includes?.users?.forEach(this.accumulateUserRecord, this)
         const publishedTweets: Tweet[] = []
         if (Array.isArray(results.data)) {
@@ -140,7 +137,7 @@ class TwitterClient implements TwitterServiceClient {
                 }
             })
         } else {
-            // Got user record, complete tweets we can
+            // Got user records, complete tweets we can
             const user = results.data
             this.upsertUser(results.data)
             const completedTweets = this.tweetsQueue.filter((tweetData) => tweetData.author_id === user.id)
@@ -177,8 +174,8 @@ class TwitterClient implements TwitterServiceClient {
     }
 
     login(): void {
-        if (this.userName !== null) {
-            this.twitter.fetchUserDataByUserName(this.userName)
+        if (this.userName !== null && this.token !== null) {
+            this.fetchTweetsForLoggedInUser()
         }
     }
 

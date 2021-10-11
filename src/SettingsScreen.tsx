@@ -47,9 +47,15 @@ class SettingsScreen extends NavigationComponent<PropsType, StateType> {
         return (
             <View style={this.styles.container}>
                 <View>
+                    <Button 
+                        color={Colors.primary}
+                        title="Login"
+                        onPress={this.loginPressHandler}
+                    />
                     <Text style={this.styles.titleText}>Bearer Token</Text>
                     <TextInput
                         placeholder="token"
+                        secureTextEntry={true}
                         multiline={true}
                         numberOfLines={5}
                         style={this.styles.textInput}
@@ -60,11 +66,6 @@ class SettingsScreen extends NavigationComponent<PropsType, StateType> {
                         placeholder="@username" 
                         style={this.styles.textInput} 
                         onChangeText={this.getChangeHandlerFor('username')}
-                    />
-                    <Button 
-                        color={Colors.primary}
-                        title="Login"
-                        onPress={this.loginPressHandler}
                     />
                 </View>
             </View>

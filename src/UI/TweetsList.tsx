@@ -61,7 +61,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
     private _tweetsSubscription?: EmitterSubscription
 
     onScreenChangeHandler(): void {
-
+        console.log("Do nothing for now")
     }
 
     onRefreshHandler(): void {
