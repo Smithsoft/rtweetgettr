@@ -1,0 +1,188 @@
+{
+    "data": [
+        {
+            "entities": {
+                "mentions": [
+                    {
+                        "start": 33,
+                        "end": 38,
+                        "username": "sbxr",
+                        "id": "28624682"
+                    }
+                ]
+            },
+            "author_id": "2421631333",
+            "created_at": "2016-06-01T01:27:08.000Z",
+            "id": "737817726844968963",
+            "referenced_tweets": [
+                {
+                    "type": "quoted",
+                    "id": "737810183989125121"
+                }
+            ],
+            "text": "We found someone who can eclipse @sbxr - that's a feat in itself!  :-) https://t.co/ogSJqnsi24"
+        },
+        {
+            "author_id": "2421631333",
+            "created_at": "2016-06-01T01:25:23.000Z",
+            "id": "737817286325600256",
+            "referenced_tweets": [
+                {
+                    "type": "quoted",
+                    "id": "737810183989125121"
+                }
+            ],
+            "text": "Nice work Deb! https://t.co/ogSJqnsi24"
+        },
+        {
+            "author_id": "2421631333",
+            "created_at": "2016-05-31T05:35:46.000Z",
+            "id": "737517909140856833",
+            "text": "Just fixed: that \"cannot add rows to an array root element\" bug.  Grab v1.1.1 at https://t.co/D6GSVeBAAx  :-)"
+        },
+        {
+            "author_id": "2421631333",
+            "created_at": "2015-08-15T07:02:11.000Z",
+            "id": "632447174219960320",
+            "text": "A couple folks who used PayPal to pick up a copy of Plistinator missed out on a key! Sorry!!  You should have those keys now.  :-)"
+        },
+        {
+            "author_id": "2421631333",
+            "created_at": "2015-06-11T02:03:18.000Z",
+            "id": "608816747328618496",
+            "text": "Version 1.1 is out!  Check http://t.co/D6GSVeBAAx if you haven't got it yet.  Mac App Store folks: its in review &amp; should be with you soon!"
+        },
+        {
+            "author_id": "2421631333",
+            "created_at": "2015-06-03T01:59:24.000Z",
+            "id": "605916664383729664",
+            "text": "Work on a couple of issues is continuing for the little editor that can.  Release of v1.1 w several improvements by end June!"
+        },
+        {
+            "entities": {
+                "mentions": [
+                    {
+                        "start": 57,
+                        "end": 73,
+                        "username": "happysnowmantec",
+                        "id": "45109053"
+                    }
+                ]
+            },
+            "author_id": "2421631333",
+            "created_at": "2015-06-03T01:56:33.000Z",
+            "id": "605915946633469953",
+            "text": "Linux 32 bit support comes to Plistinator!  Map props to @happysnowmantec for testing it out for us. http://t.co/RaNb5P5ku0"
+        },
+        {
+            "entities": {
+                "mentions": [
+                    {
+                        "start": 1,
+                        "end": 12,
+                        "username": "GregHuntMP",
+                        "id": "60483082"
+                    },
+                    {
+                        "start": 109,
+                        "end": 115,
+                        "username": "GetUp",
+                        "id": "26189696"
+                    }
+                ]
+            },
+            "author_id": "2421631333",
+            "created_at": "2015-01-17T12:50:14.000Z",
+            "id": "556433312500039682",
+            "text": ".@GregHuntMP demanded we 'explain' some things about the Reef for him. So we did. http://t.co/6pjRSDF54m via @GetUp"
+        }
+    ],
+    "includes": {
+        "users": [
+            {
+                "id": "2421631333",
+                "name": "Plistinator",
+                "username": "plistinator"
+            },
+            {
+                "id": "28624682",
+                "name": "Steve Baxter",
+                "username": "sbxr"
+            },
+            {
+                "id": "2647302752",
+                "name": "PetCloud.com",
+                "username": "pet_cloud"
+            },
+            {
+                "id": "45109053",
+                "name": "Kathryn Benedicto",
+                "username": "happysnowmantec"
+            },
+            {
+                "id": "60483082",
+                "name": "Greg Hunt",
+                "username": "GregHuntMP"
+            },
+            {
+                "id": "26189696",
+                "name": "GetUp!",
+                "username": "GetUp"
+            }
+        ],
+        "tweets": [
+            {
+                "entities": {
+                    "mentions": [
+                        {
+                            "start": 13,
+                            "end": 23,
+                            "username": "pet_cloud",
+                            "id": "2647302752"
+                        },
+                        {
+                            "start": 32,
+                            "end": 48,
+                            "username": "TurnbullMalcolm",
+                            "id": "16734909"
+                        },
+                        {
+                            "start": 58,
+                            "end": 72,
+                            "username": "RiverCityLabs",
+                            "id": "444925097"
+                        },
+                        {
+                            "start": 84,
+                            "end": 96,
+                            "username": "SteveBaxter",
+                            "id": "548224699"
+                        },
+                        {
+                            "start": 97,
+                            "end": 108,
+                            "username": "WyattRoyMP",
+                            "id": "181339184"
+                        }
+                    ]
+                },
+                "author_id": "2647302752",
+                "geo": {
+                    "place_id": "004ec16c62325149"
+                },
+                "created_at": "2016-06-01T00:57:10.000Z",
+                "id": "737810183989125121",
+                "text": "So great for @pet_cloud to meet @turnbullmalcolm today at @RiverCityLabs along with @SteveBaxter @WyattRoyMP https://t.co/KwDMrnbxmM",
+                "attachments": {
+                    "media_keys": ["3_737810181271085056"]
+                }
+            }
+        ]
+    },
+    "meta": {
+        "oldest_id": "556433312500039682",
+        "newest_id": "737817726844968963",
+        "result_count": 8,
+        "next_token": "zldjwdz3w6sba13nesn479m3pviwsegx9874tson036"
+    }
+}
