@@ -13,13 +13,12 @@ import Tweet from '../Model/Tweet'
 import { TwitterClient } from '../Model/TwitterClient'
 import Colors from './Colors'
 import Header from './RGHeader'
-import TweetRow from './TweetRow'
+import TweetRow, { SelectHandler } from './TweetRow'
 import { tweets as tweetData } from '../Model/FakeData'
 import { ITEM_HEIGHT } from './Dims'
 
 import Config from 'react-native-config'
-import { Dimensions } from 'react-native';
-
+import { Dimensions } from 'react-native'
 
 type LayoutParams = {
     length: number
@@ -36,6 +35,7 @@ const itemLayout = (
 
 type PropsType = {
     isDarkMode: boolean
+    showDetailHandler: SelectHandler
 }
 
 type StateType = {
@@ -88,6 +88,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
                 tweet={item}
                 isDarkMode={this.state.isDarkMode}
                 profilePic={picSource}
+                onSelect={ this.props.showDetailHandler }
             />
         )
     }

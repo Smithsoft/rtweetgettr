@@ -31,3 +31,10 @@ BEARER_TOKEN=XXXXXXXXXXXXX
 Then run `./curl.sh` to try some Twitter API calls. The package.json also has a script to run that.
 
 Where there `XXXX` is something like `AAAA...` - the actual Twitter API bearer token. 
+
+## Architecture
+
+* Uses `react-native-navigation` by Wix - a "more native" implementation 
+
+See [this comparison article](https://blog.logrocket.com/react-navigation-vs-react-native-navigation/) - tl;dr - if you're used to web it will allow you to turn your "mobile app" into a horrible react mess by wrapping the whole app.
+

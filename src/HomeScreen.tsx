@@ -1,5 +1,6 @@
 import React, { ErrorInfo } from 'react'
 import {
+    Navigation,
     NavigationComponent,
     NavigationComponentProps,
     Options,
@@ -10,8 +11,8 @@ import Colors from './UI/Colors'
 import AppearanceManager from './UI/AppearanceManager'
 
 import ErrorData from './Types/ErrorData'
-import { RequestId } from './Service/TwitterService'
 import TweetsList from './UI/TweetsList'
+import { SelectHandler } from './UI/TweetRow';
 
 type PropsType = NavigationComponentProps
 
@@ -28,13 +29,6 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         errMessage: ''
     }
 
-    private _requests: RequestId[] = []
-
-    constructor(props: PropsType) {
-        super(props)
-        this.appearanceChangeHandler = this.appearanceChangeHandler.bind(this)
-    }
-
     public static getDerivedStateFromError(err: Error): StateType {
         // Update state so the next render will show the fallback UI.
         const updatedState = {
@@ -46,10 +40,6 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         return updatedState
     }
 
-    handleError(error: ErrorData): void {
-        console.log(error)
-    }
-
     public componentDidMount(): void {
         console.log("Home screen mount")
     }
@@ -58,16 +48,37 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         console.log("Home screen unmount")
     }
 
+    /** Will catch all uncaught exceptions in the tree below it. */
     public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
         console.error('Uncaught error:', error, errorInfo)
     }
 
-    appearanceChangeHandler(manager: AppearanceManager): void {
+    // Use arrow function here for hanlder to get "free" binding
+    appearanceChangeHandler = (manager: AppearanceManager): void => {
         this.setState(prevState => {
             return {
                 ...prevState,
                 isDarkMode: manager.state.colorScheme === 'dark',
             }
+        })
+    }
+
+    showDetail: SelectHandler = (tweetIx) => {
+        console.log(tweetIx)
+        Navigation.push(this.props.componentId, {
+            component: {
+                name: 'DetailScreen', 
+                passProps: {
+                    tweetIndex: tweetIx
+                },
+                options: { // Optional options object to configure the screen
+                  topBar: {
+                    title: {
+                      text: 'Tweet Detail' // Set the TopBar title of the new Screen
+                    }
+                  }
+                }
+              }
         })
     }
 
@@ -80,15 +91,11 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
             ? this.lightText.textColor
             : this.darkText.textColor
 
-        console.log('######')
-        //console.log(JSON.stringify(tweets))
-        console.log('render')
-
         const routineView = (
             <>
                 <AppearanceManager handler={this.appearanceChangeHandler} />
                 <SafeAreaView style={backgroundStyle}>
-                    <TweetsList isDarkMode={isDk} />
+                    <TweetsList showDetailHandler={ this.showDetail } isDarkMode={isDk} />
                 </SafeAreaView>
             </>
         )
