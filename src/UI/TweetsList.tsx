@@ -6,6 +6,7 @@ import {
     ListRenderItemInfo,
     RefreshControl,
     StyleSheet,
+    View,
 } from 'react-native'
 import { Source } from 'react-native-fast-image'
 
@@ -50,6 +51,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
         this.itemRenderHandler = this.itemRenderHandler.bind(this)
         this.onRefreshHandler = this.onRefreshHandler.bind(this)
         this.dataHandler = this.dataHandler.bind(this)
+        this.itemSeperator = this.itemSeperator.bind(this)
     }
 
     state = {
@@ -121,6 +123,16 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
         this._tweetsSubscription?.remove()
     }
 
+    itemSeperator(): JSX.Element {
+        return (<View style={{
+            height: 2,
+            width: "100%",
+            backgroundColor: this.state.isDarkMode
+                ? Colors.white
+                : Colors.black,
+          }} />)
+    }
+
     render(): JSX.Element {
         const listHeaderComponent = <Header headerTitle="RTweetGettr" />
 
@@ -144,6 +156,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
                 style={backgroundStyle}
                 removeClippedSubviews={true}
                 getItemLayout={itemLayout}
+                ItemSeparatorComponent={this.itemSeperator}
                 refreshControl={
                     <RefreshControl
                       refreshing={this.state.refreshing}

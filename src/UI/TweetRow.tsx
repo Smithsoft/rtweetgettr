@@ -22,15 +22,18 @@ class TweetRow extends React.PureComponent<PropType> {
     }
 
     render(): JSX.Element {
+        const backgroundStyle = {
+            backgroundColor: this.props.isDarkMode ? Colors.darker : Colors.lighter,
+        }
         return (
             <TouchableHighlight onPress={ this.selectHandler }>
-                <View style={styles.sectionContainer}>
+                <View style={[styles.sectionContainer, backgroundStyle]}>
                     <FastImage
                         style={styles.imageContainer}
                         source={this.props.profilePic}
                         resizeMode={FastImage.resizeMode.contain}
                     />
-                    <View style={styles.textContainer}>
+                    <View style={[styles.textContainer]}>
                         <Text
                             style={[
                                 styles.sectionTitle,
