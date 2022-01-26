@@ -107,6 +107,8 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
 
     componentDidMount(): void {
         Dimensions.addEventListener("change", this.onScreenChangeHandler)
+        // THIS IS ALL "FOR NOW" - Should load these from settings screen
+        // Also should use events to decouple from TwitterClient class
         const token = Config.BEARER_TOKEN
         const user = Config.USER_NAME
         console.log(`TweetsList mounting ######## - ${token} - ${user}`)
@@ -115,6 +117,7 @@ class TweetsList extends React.PureComponent<PropsType, StateType> {
             .setToken(token)
             .setUserName(user)
             .fetchTweetsForLoggedInUser()
+        TweetRepo
     }
 
     componentWillUnmount(): void {

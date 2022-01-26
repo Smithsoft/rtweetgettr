@@ -5,6 +5,7 @@
 import { Navigation } from 'react-native-navigation'
 import DetailScreen from './src/DetailScreen'
 import HomeScreen from './src/HomeScreen'
+import { TwitterClient } from './src/Model/TwitterClient'
 import SettingsScreen from './src/SettingsScreen'
 
 // Navigation.setDefaultOptions({

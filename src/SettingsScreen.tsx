@@ -1,6 +1,6 @@
 import React from "react"
 import { NavigationComponent, NavigationComponentProps, Options } from 'react-native-navigation';
-import { Button, Dimensions, StyleSheet, Text, TextInput, View } from "react-native"
+import { Button, Dimensions, SafeAreaView, StyleSheet, Text, TextInput, View } from "react-native"
 import Colors from './UI/Colors'
 import { TwitterClient } from "./Model/TwitterClient";
 
@@ -45,30 +45,32 @@ class SettingsScreen extends NavigationComponent<PropsType, StateType> {
 
     render(): JSX.Element {
         return (
-            <View style={this.styles.container}>
-                <View>
-                    <Button 
-                        color={Colors.primary}
-                        title="Login"
-                        onPress={this.loginPressHandler}
-                    />
-                    <Text style={this.styles.titleText}>Bearer Token</Text>
-                    <TextInput
-                        placeholder="token"
-                        secureTextEntry={true}
-                        multiline={true}
-                        numberOfLines={5}
-                        style={this.styles.textInput}
-                        onChangeText={this.getChangeHandlerFor('token')}
-                    />
-                    <Text style={this.styles.titleText}>User name</Text>
-                    <TextInput 
-                        placeholder="@username" 
-                        style={this.styles.textInput} 
-                        onChangeText={this.getChangeHandlerFor('username')}
-                    />
+            <SafeAreaView>
+                <View style={this.styles.container}>
+                    <View>
+                        <Button 
+                            color={Colors.primary}
+                            title="Login"
+                            onPress={this.loginPressHandler}
+                        />
+                        <Text style={this.styles.titleText}>Bearer Token</Text>
+                        <TextInput
+                            placeholder="token"
+                            secureTextEntry={true}
+                            multiline={true}
+                            numberOfLines={5}
+                            style={this.styles.textInput}
+                            onChangeText={this.getChangeHandlerFor('token')}
+                        />
+                        <Text style={this.styles.titleText}>User name</Text>
+                        <TextInput 
+                            placeholder="@username" 
+                            style={this.styles.textInput} 
+                            onChangeText={this.getChangeHandlerFor('username')}
+                        />
+                    </View>
                 </View>
-            </View>
+            </SafeAreaView>
         )
     }
 

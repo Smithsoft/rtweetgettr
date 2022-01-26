@@ -5,7 +5,7 @@ import {
     NavigationComponentProps,
     Options,
 } from 'react-native-navigation'
-import { Appearance, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Appearance, SafeAreaView, StyleSheet, Text, View, AppStateStatus } from 'react-native';
 
 import Colors from './UI/Colors'
 import AppearanceManager from './UI/AppearanceManager'
@@ -13,6 +13,10 @@ import AppearanceManager from './UI/AppearanceManager'
 import ErrorData from './Types/ErrorData'
 import TweetsList from './UI/TweetsList'
 import { SelectHandler } from './UI/TweetRow';
+import AppStateManager from './UI/AppState'
+import { TwitterClient } from './Model/TwitterClient';
+import TwitterStore from './Model/TwitterStore';
+import { NativeBaseProvider } from 'native-base';
 
 type PropsType = NavigationComponentProps
 
@@ -63,6 +67,18 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
         })
     }
 
+    appBackgroundHandler = (manager: AppStateManager, newState: AppStateStatus): void => {
+        console.log(`App backgrounding due to state: ${manager.state.appState} -> ${newState}`)
+        TwitterClient.instance.stopAllRequests()
+        TwitterStore.instance.stopSync()
+    }
+
+    appForegroundHanlder = (manager: AppStateManager, newState: AppStateStatus): void => {
+        console.log(`App foregrounding due to state: ${manager.state.appState} -> ${newState}`)
+        TwitterClient.instance.startRequests()
+        TwitterStore.instance.startSync()
+    }
+
     showDetail: SelectHandler = (tweetIx) => {
         console.log(tweetIx)
         Navigation.push(this.props.componentId, {
@@ -92,12 +108,7 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
             : this.darkText.textColor
 
         const routineView = (
-            <>
-                <AppearanceManager handler={this.appearanceChangeHandler} />
-                <SafeAreaView style={backgroundStyle}>
-                    <TweetsList showDetailHandler={ this.showDetail } isDarkMode={isDk} />
-                </SafeAreaView>
-            </>
+            <TweetsList showDetailHandler={ this.showDetail } isDarkMode={isDk} />
         )
 
         const errorView = (
@@ -110,7 +121,19 @@ class HomeScreen extends NavigationComponent<PropsType, StateType> {
                 </Text>
             </View>
         )
-        return this.state.hasError ? errorView : routineView
+        return (
+            <>
+                <AppStateManager 
+                    moveToBackgroundHanlder={this.appBackgroundHandler} 
+                    comeToForegroundHandler={this.appForegroundHanlder} />
+                <AppearanceManager handler={this.appearanceChangeHandler} />
+                <SafeAreaView style={backgroundStyle}>
+                    <NativeBaseProvider>
+                        { this.state.hasError ? errorView : routineView }
+                    </NativeBaseProvider>
+                </SafeAreaView>
+            </>
+        )
     }
 
     styles = StyleSheet.create({

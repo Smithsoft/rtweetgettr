@@ -24,6 +24,8 @@ export type RequestId = symbol
 
 class TwitterService {
 
+    static nullRequest = Symbol()
+
     /** If a fetch has completed, contains the result of the fetch */
     fetchResult?: FetchResult
 
@@ -34,13 +36,15 @@ class TwitterService {
 
     _client: TwitterServiceClient
 
+    /** Set to true if client is paused */
+    paused = false
+
     constructor(client: TwitterServiceClient) {
         this._client = client
         this.errorHandler = this.errorHandler.bind(this)
     }
 
     private _requestsInFlight: RequestInFlight[] = []
-    private _cancelTokens = axios.CancelToken.source()
 
     errorHandler(error: AxiosError<ErrorResponse>): void {
         console.log(JSON.stringify(error));
@@ -85,7 +89,20 @@ class TwitterService {
         }
     }
 
+    cancelAllRequests(): void {
+        const prev_pause = this.paused
+        this.paused = true
+        console.log("Cancel All Requests: " + this._requestsInFlight.length)
+        this._requestsInFlight.forEach(r => { r.cancel.cancel() })
+        this._requestsInFlight = []
+        this.paused = prev_pause
+    }
+
     fetchUserDataByUserName(userName: string): RequestId {
+        if (this.paused) { 
+            console.log("Ignoring fetch while paused")
+            return TwitterService.nullRequest
+        }
         console.log(`fetchUserDataByUserName ${userName}`)
         const url = `https://api.twitter.com/2/users/by/username/${userName}`
         const resourceName = userName
@@ -105,7 +122,11 @@ class TwitterService {
         return rq.id
     }
 
-    fetchTweetsForUser(userId: string): void {
+    fetchTweetsForUser(userId: string): RequestId {
+        if (this.paused) {
+            console.log("Ignoring fetch while paused")
+            return TwitterService.nullRequest
+        }
         const url = `https://api.twitter.com/2/users/${userId}/tweets`
         const fields = [
             'author_id',
@@ -139,17 +160,24 @@ class TwitterService {
                 this._client.handleData(response.data)
                 console.log(JSON.stringify(response.data))
             })
+        return rq.id
     }
 
-    fetchUserDataById(userId: string): void {
+    fetchUserDataById(userId: string): RequestId {
+        if (this.paused) {
+            console.log("Ignoring fetch while paused")
+            return TwitterService.nullRequest
+        }
         const url = `https://api.twitter.com/2/users/${userId}`
         const fields = [
             'profile_image_url',
             'public_metrics',
             'verified'
         ]
+        const rq = this.cancellation({ url, 'resourceName': userId })
         const params: AxiosRequestConfig = {
             ...this.conf(),
+            cancelToken: rq.cancel.token,
             params: {
                 'user.fields': fields.join()
             }
@@ -160,6 +188,7 @@ class TwitterService {
                 console.log(JSON.stringify(response.data))
                 this._client.handleData(response.data)
             })
+        return rq.id
     }
 }
 

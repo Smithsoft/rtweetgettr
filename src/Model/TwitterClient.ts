@@ -6,8 +6,8 @@ import TweetDataResponse from "../Types/TweetDataResponse"
 import Tweet from "./Tweet"
 import { DeviceEventEmitter, EmitterSubscription } from "react-native"
 import UserData from '../Types/UserData';
-import { ErrorInfo } from "react"
 import TweetData from "../Types/TweetData"
+import TweetRepo from '../Repository/TweetRepo';
 
 export type ServiceResult = 'TWEETS' | 'USER' | 'ERROR'
 
@@ -98,7 +98,7 @@ class TwitterClient implements TwitterServiceClient {
         return this
     }
 
-    emitEvent(result: ServiceResult, data: Tweet[] | UserData | ErrorInfo): void {
+    emitEvent(result: ServiceResult, data: Tweet[] | UserData | Error): void {
         setTimeout(() => {
             DeviceEventEmitter.emit(result, data)
         })
@@ -183,6 +183,15 @@ class TwitterClient implements TwitterServiceClient {
         requestList.forEach((id) => {
             this.twitter.cancelRequest(id)
         })
+    }
+
+    stopAllRequests(): void {
+        this.twitter.paused = true
+        this.twitter.cancelAllRequests()
+    }
+
+    startRequests(): void {
+        this.twitter.paused = false
     }
 
     fetchTweetsForLoggedInUser(): void {
