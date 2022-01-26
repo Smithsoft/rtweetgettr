@@ -34,7 +34,23 @@ Where there `XXXX` is something like `AAAA...` - the actual Twitter API bearer t
 
 ## Architecture
 
+The idea of this app is to implement a REST app that is not a "naive implementation".  See [this 
+great video](https://www.youtube.com/watch?v=xHXn3Kg2IQE&t=457s) (even tho' its from 2010) by Android team members talking about "in memory" REST apps.
+
+It also demonstrates:
+
+* Loose coupling
+* Use of events
+* Using plain singletons instead of Redux
+* Repository pattern
+* Avoiding React code outside of the UX
+
+![RTweetGettr Architecture](rtweetgettr-design.png)
+
 * Uses `react-native-navigation` by Wix - a "more native" implementation 
 
 See [this comparison article](https://blog.logrocket.com/react-navigation-vs-react-native-navigation/) - tl;dr - if you're used to web it will allow you to turn your "mobile app" into a horrible react mess by wrapping the whole app.
 
+## Current State
+
+* Not finished.  Needs work.
